@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة تفعيل العضويات الرسمية</title>
-    <!-- الواجهة الحديثة والسريعة -->
+    <title>بوابة تفعيل العضويات الرسمية - GAINEX</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
 
-    <!-- Header -->
     <header class="bg-slate-800 border-b border-slate-700 p-4 text-center sticky top-0 z-50 shadow-md">
         <h1 class="text-xl font-bold text-emerald-400">بوابة تفعيل العضويات الرقمية</h1>
         <p class="text-xs text-slate-400 mt-1">سجل بياناتك وارفق لقطة الإيصال لتفعيل حسابك بأمان فوري</p>
     </header>
 
-    <!-- Main Content -->
     <main class="container mx-auto max-w-md p-4 flex-grow">
-        
         <!-- Step 1 -->
         <div class="bg-slate-800 rounded-2xl p-5 mb-4 border border-slate-700 shadow-xl">
             <h2 class="text-sm font-bold mb-4 text-slate-200 border-r-4 border-emerald-500 pr-2">1. البيانات الشخصية</h2>
@@ -38,31 +34,8 @@
         <!-- Step 2 -->
         <div class="mb-4">
             <h2 class="text-sm font-bold mb-3 text-slate-200 border-r-4 border-emerald-500 pr-2">2. اختر باقة الاشتراك المحولة:</h2>
-            <div class="space-y-2">
-                <div onclick="selectActiveTier('1m', 300)" id="card-1m" class="package-card border border-slate-700 bg-slate-800/60 rounded-xl p-4 cursor-pointer hover:bg-slate-800 transition-all">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <input type="radio" name="membership_tier" id="radio-1m" class="text-emerald-500">
-                            <div>
-                                <h3 class="font-bold text-sm text-slate-100">شهر واحد</h3>
-                                <span class="text-[11px] text-emerald-400">السعر الأساسي</span>
-                            </div>
-                        </div>
-                        <span class="text-base font-bold text-slate-100">300 ج.م</span>
-                    </div>
-                </div>
-                <div onclick="selectActiveTier('1y', 1800)" id="card-1y" class="package-card border border-emerald-500 bg-slate-800 rounded-xl p-4 cursor-pointer hover:bg-slate-800 transition-all ring-2 ring-emerald-500/30">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <input type="radio" name="membership_tier" id="radio-1y" checked class="text-emerald-500">
-                            <div>
-                                <h3 class="font-bold text-sm text-slate-100">سنة كاملة</h3>
-                                <span class="text-[11px] text-emerald-400">وفر 1800 جنيه (الأكثر طلباً)</span>
-                            </div>
-                        </div>
-                        <span class="text-base font-bold text-slate-100">1800 ج.م</span>
-                    </div>
-                </div>
+            <div id="packages-container" class="space-y-2">
+                <div class="text-center p-4 text-xs text-slate-400">جاري تحميل الباقات المحدثة فوريّاً...</div>
             </div>
         </div>
 
@@ -80,26 +53,68 @@
             </div>
         </div>
 
-        <!-- Submit Button -->
         <button id="submit-btn" onclick="sendDirectToTelegram()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-4 rounded-xl shadow-lg transition-all flex justify-center items-center text-base">
             <span>تأكيد الاشتراك وإرسال الإيصال فوراً</span>
         </button>
-
     </main>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // 📥 ضع بياناتك الفورية هنا بدون أي مواقع وسيطة
-        const BOT_TOKEN = "8913713791:AAEQ5VWLTiNvCTQ5w_Oh-zBQotVFFukOdlo";
-        const ADMIN_CHAT_ID = "907815398";
+        // 📥 إعدادات الهوية الحية (ضع بيانات توكن بوت فاذر والأيدي الشخصي الخاص بك هنا)
+        const BOT_TOKEN = "ضع_هنا_توكن_البوت_الخاص_بك_من_بوت_فاذر";
+        const ADMIN_CHAT_ID = "ضع_هنا_الـ_Chat_ID_الخاص_بحسابك_الشخصي";
+
+        // الباقات الافتراضية الذكية
+        let subscriptionPackages = [
+            { id: "1m", duration: "شهر واحد", price: 300, tag: "السعر الأساسي" },
+            { id: "3m", duration: "3 شهور", price: 700, tag: "وفر 200 جنيه" },
+            { id: "6m", duration: "6 شهور", price: 1200, tag: "وفر 600 جنيه" },
+            { id: "1y", duration: "سنة كاملة", price: 1800, tag: "وفر 1800 جنيه (الأكثر طلباً)" }
+        ];
 
         let selectedTier = "سنة كاملة";
         let selectedPrice = 1800;
         let selectedFileBlob = null;
 
-        function selectActiveTier(id, price) {
+        function fetchCloudDataAndRender() {
+            const localCloudData = localStorage.getItem('amr_packages_cloud');
+            if(localCloudData) {
+                subscriptionPackages = JSON.parse(localCloudData);
+            }
+            renderPackagesUI();
+        }
+
+        function renderPackagesUI() {
+            const container = document.getElementById('packages-container');
+            container.innerHTML = '';
+            
+            subscriptionPackages.forEach((pkg, index) => {
+                const isSelected = index === subscriptionPackages.length - 1; 
+                if(isSelected) { selectedTier = pkg.duration; selectedPrice = pkg.price; }
+                
+                const cardStyle = isSelected ? 'border-emerald-500 bg-slate-800 ring-2 ring-emerald-500/30' : 'border-slate-700 bg-slate-800/60';
+                const checkedAttr = isSelected ? 'checked' : '';
+
+                container.innerHTML += `
+                    <div onclick="selectActiveTier('${pkg.id}', ${pkg.price}, '${pkg.duration}')" id="card-${pkg.id}" class="package-card border rounded-xl p-4 cursor-pointer hover:bg-slate-800 transition-all ${cardStyle}">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="membership_tier" id="radio-${pkg.id}" ${checkedAttr} class="text-emerald-500">
+                                <div>
+                                    <h3 class="font-bold text-sm text-slate-100">${pkg.duration}</h3>
+                                    <span class="text-[11px] text-emerald-400">${pkg.tag}</span>
+                                </div>
+                            </div>
+                            <span class="text-base font-bold text-slate-100">${pkg.price} ج.م</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function selectActiveTier(id, price, duration) {
             selectedPrice = price;
-            selectedTier = id === '1m' ? "شهر واحد" : "سنة كاملة";
+            selectedTier = duration;
             document.querySelectorAll('.package-card').forEach(card => card.classList.remove('border-emerald-500', 'ring-2', 'ring-emerald-500/30'));
             document.getElementById(`card-${id}`).classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/30');
             document.getElementById(`radio-${id}`).checked = true;
@@ -114,7 +129,17 @@
         }
 
         const tgInstance = window.Telegram?.WebApp;
-        if (tgInstance) { tgInstance.expand(); }
+        if (tgInstance) { 
+            tgInstance.expand();
+            const urlParams = new URLSearchParams(window.location.search);
+            if(urlParams.has('update')) {
+                try {
+                    const decodedData = JSON.parse(decodeURIComponent(urlParams.get('update')));
+                    localStorage.setItem('amr_packages_cloud', JSON.stringify(decodedData));
+                    subscriptionPackages = decodedData;
+                } catch(e){}
+            }
+        }
 
         function sendDirectToTelegram() {
             const username = document.getElementById('tg_username').value.trim();
@@ -129,7 +154,6 @@
             actionBtn.disabled = true;
             actionBtn.innerText = "جاري الإرسال المباشر لتلجرام...";
 
-            // بناء نص الإشعار الاحترافي
             const captionText = `🚨 *طلب تفعيل اشتراك جديد* \n\n` +
                                 `👤 *العميل:* ${username}\n` +
                                 `📞 *رقم الهاتف:* ${phone}\n` +
@@ -137,7 +161,6 @@
                                 `💰 *المبلغ المحول:* ${selectedPrice} ج.م\n\n` +
                                 `⚠️ *تأكد من حسابك البنكي ثم قم بتفعيل العميل يدوياً.*`;
 
-            // إرسال الصورة والبيانات مباشرة لتلجرام بدون أي وسيط برمجياً
             const formData = new FormData();
             formData.append('chat_id', ADMIN_CHAT_ID);
             formData.append('photo', selectedFileBlob);
@@ -163,6 +186,8 @@
                 actionBtn.innerText = "تأكيد الاشتراك وإرسال الإيصال فوراً";
             });
         }
+
+        window.onload = fetchCloudDataAndRender;
     </script>
 </body>
 </html>
