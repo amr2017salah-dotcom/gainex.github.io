@@ -1,80 +1,90 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام تسجيل العضويات والدفع الرسمي</title>
-    <script src="[https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4](https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4)"></script>
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link href="[https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap](https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap)" rel="stylesheet">
+    <title>بوابة تفعيل العضويات الرسمية</title>
+    <!-- Tailwind CSS الواجهة الحديثة والمتجاوبة -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;650;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-slate-950">
 
     <!-- Header -->
-    <header class="bg-slate-800 border-b border-slate-700 p-4 text-center shadow-lg">
-        <h1 class="text-xl font-bold text-emerald-400">بوابة تفعيل العضويات الرقمية</h1>
-        <p class="text-xs text-slate-400 mt-1">سجل بياناتك وارفع إيصال التحويل لتفعيل اشتراكك فوراً</p>
+    <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700/60 p-4 text-center sticky top-0 z-50 shadow-md">
+        <h1 class="text-xl font-bold text-emerald-400 tracking-wide">بوابة تفعيل العضويات الرقمية</h1>
+        <p class="text-xs text-slate-400 mt-1">سجل بياناتك وارفق لقطة الإيصال لتفعيل حسابك في الخاص بأمان</p>
     </header>
 
-    <!-- Main Content -->
+    <!-- Main Form Content -->
     <main class="container mx-auto max-w-md p-4 flex-grow">
         
-        <!-- Webhook Configuration (مخفي، يتم قراءته ديناميكياً) -->
-        <input type="hidden" id="webhook_url" value="[https://hook.us1.make.com/YOUR_ACTUAL_WEBHOOK_HERE](https://hook.us1.make.com/YOUR_ACTUAL_WEBHOOK_HERE)">
-
-        <!-- User Data Step -->
-        <div class="bg-slate-800 rounded-2xl p-5 mb-4 border border-slate-700 shadow-md">
-            <h2 class="text-md font-semibold mb-3 text-slate-200 border-r-4 border-emerald-500 pr-2">1. البيانات الشخصية</h2>
+        <!-- Step 1: User Credentials -->
+        <div class="bg-slate-800 rounded-2xl p-5 mb-4 border border-slate-700/50 shadow-xl">
+            <h2 class="text-sm font-bold mb-4 text-slate-200 border-r-4 border-emerald-500 pr-2 flex items-center gap-2">
+                <span>1. البيانات الشخصية</span>
+            </h2>
             <div class="space-y-3">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">اسم المستخدم على تلجرام (Telegram Username)</label>
-                    <input type="text" id="tg_username" placeholder="@username" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald-500 text-left" dir="ltr" required>
+                    <input type="text" id="tg_username" placeholder="@username" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 transition-colors text-left font-mono" dir="ltr" required>
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">رقم الهاتف المرتبط بحسابك</label>
-                    <input type="tel" id="user_phone" placeholder="01xxxxxxxxx" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald-500 text-left" dir="ltr" required>
+                    <label class="block text-xs text-slate-400 mb-1">رقم الهاتف (تأكيد محفظة كاش / إنستا باي)</label>
+                    <input type="tel" id="user_phone" placeholder="01xxxxxxxxx" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 transition-colors text-left font-mono" dir="ltr" required>
                 </div>
             </div>
         </div>
 
-        <!-- Pricing Packages Step -->
+        <!-- Step 2: Tier Selection -->
         <div class="mb-4">
-            <h2 class="text-md font-semibold mb-3 text-slate-200 border-r-4 border-emerald-500 pr-2">2. اختر باقة الاشتراك المناسبة:</h2>
+            <h2 class="text-sm font-bold mb-3 text-slate-200 border-r-4 border-emerald-500 pr-2">2. اختر باقة الاشتراك المحولة:</h2>
             <div id="packages-container" class="space-y-2">
-                <!-- الـ JavaScript يولد الباقات هنا تلقائياً -->
+                <!-- الـ JS سيقوم ببناء الهيكل السعري ديناميكياً هنا -->
             </div>
         </div>
 
-        <!-- Receipt Upload Step -->
-        <div class="bg-slate-800 rounded-2xl p-5 mb-6 border border-slate-700 shadow-md">
-            <h2 class="text-md font-semibold mb-2 text-slate-200 border-r-4 border-emerald-500 pr-2">3. إرفاق إيصال التحويل</h2>
-            <p class="text-xs text-slate-400 mb-3">يرجى تحويل المبلغ الموضح للباقة المحددة وارفق لقطة شاشة للإيصال.</p>
+        <!-- Step 3: Secure Asset Upload -->
+        <div class="bg-slate-800 rounded-2xl p-5 mb-6 border border-slate-700/50 shadow-xl">
+            <h2 class="text-sm font-bold mb-2 text-slate-200 border-r-4 border-emerald-500 pr-2">3. إرفاق إيصال التحويل الرقمي</h2>
+            <p class="text-xs text-slate-400 mb-4">يرجى رفع لقطة شاشة (Screenshot) واضحة ومكتملة للإيصال لضمان سرعة التفعيل الفوري.</p>
             
             <div class="flex items-center justify-center w-full">
-                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-600 border-dashed rounded-lg cursor-pointer bg-slate-900 hover:bg-slate-850 transition duration-200">
-                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg class="w-8 h-8 mb-3 text-slate-400" aria-hidden="true" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" fill="none" viewbox="0 0 20 16">
+                <label class="flex flex-col items-center justify-center w-full h-36 border-2 border-slate-600 border-dashed rounded-xl cursor-pointer bg-slate-900 hover:bg-slate-850/50 transition-all duration-200">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-2">
+                        <svg class="w-8 h-8 mb-2 text-slate-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                         </svg>
-                        <p class="text-xs text-slate-400"><span class="font-semibold">اضغط لرفع الإيصال</span> أو اسحب الملف هنا</p>
-                        <p id="file-name-display" class="text-[11px] text-emerald-400 mt-1 font-medium"></p>
+                        <p class="text-xs text-slate-400"><span class="font-semibold text-emerald-400">اضغط هنا لاختيار الإيصال</span></p>
+                        <p id="file-name-display" class="text-xs text-cyan-400 mt-2 font-mono truncate max-w-xs"></p>
                     </div>
-                    <input type="file" id="receipt_image" accept="image/*" class="hidden" onchange="updateFileName()"/>
+                    <input type="file" id="receipt_image" accept="image/*" class="hidden" onchange="processSelectedImage()"/>
                 </label>
             </div>
         </div>
 
-        <!-- Submit Button -->
-        <button id="submit-btn" onclick="sendToNoCodeWorkflow()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold p-3.5 rounded-xl shadow-lg transition duration-200 transform active:scale-95 flex justify-center items-center gap-2">
+        <!-- Master Transaction Trigger -->
+        <button id="submit-btn" onclick="executeNoCodePipeline()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-4 rounded-xl shadow-lg shadow-emerald-500/10 transition-all duration-200 transform active:scale-98 flex justify-center items-center gap-2 text-base">
             <span>تأكيد الاشتراك وإرسال الإيصال للأتمتة</span>
         </button>
 
     </main>
 
+    <!-- Secure Footer -->
+    <footer class="bg-slate-950 p-3 text-center border-t border-slate-850">
+        <p class="text-[10px] text-slate-500 tracking-wider font-mono">SECURE NO-CODE DATA PIPELINE // VIA MAKE WEBHOOK</p>
+    </footer>
+
+    <!-- SDK Integration -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // إعداد الباقات من قاعدة البيانات المحلية للمتصفح أو القيم الافتراضية
+        // رابط الأتمتة المباشر والخاص بك تم إدراجه هنا بأمان
+        const MAKE_WEBHOOK_ENDPOINT = "https://hook.us2.make.com/6c8yd7t05u3zglsacdpjvei87vo2olui";
+
+        // مصفوفة الباقات كما طلبت مع جلب أي تعديلات سعرية محفوظة من لوحة التحكم
         let packages = JSON.parse(localStorage.getItem('custom_packages')) || [
             { id: "1m", duration: "شهر واحد", basePrice: 300, discount: 0, tag: "السعر الأساسي", popular: false },
             { id: "2m", duration: "شهرين", basePrice: 600, discount: 200, tag: "وفر 200 جنيه", popular: false },
@@ -83,24 +93,24 @@
             { id: "1y", duration: "سنة كاملة", basePrice: 3600, discount: 1800, tag: "وفر 1800 جنيه (الأكثر طلباً)", popular: true }
         ];
 
-        function renderPackages() {
+        function renderClientPackages() {
             const container = document.getElementById('packages-container');
             container.innerHTML = '';
             packages.forEach(pkg => {
                 const finalPrice = pkg.basePrice - pkg.discount;
-                const isSelected = pkg.popular ? 'border-emerald-500 bg-slate-800 ring-2 ring-emerald-500' : 'border-slate-700 bg-slate-800';
+                const isSelected = pkg.popular ? 'border-emerald-500 bg-slate-800/90 ring-2 ring-emerald-500/30' : 'border-slate-700 bg-slate-800/60';
                 container.innerHTML += `
-                    <div onclick="selectPackage('${pkg.id}')" id="card-${pkg.id}" class="package-card border rounded-xl p-3.5 transition-all duration-200 cursor-pointer ${isSelected}">
+                    <div onclick="selectActiveTier('${pkg.id}')" id="card-${pkg.id}" class="package-card border rounded-xl p-4 transition-all duration-200 cursor-pointer hover:bg-slate-800 ${isSelected}">
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-3">
-                                <input type="radio" name="membership_pkg" id="radio-${pkg.id}" value="${pkg.id}" ${pkg.popular ? 'checked' : ''} class="w-4 h-4 text-emerald-500 bg-slate-900 border-slate-600">
+                                <input type="radio" name="membership_tier" id="radio-${pkg.id}" value="${pkg.id}" ${pkg.popular ? 'checked' : ''} class="w-4 h-4 text-emerald-500 bg-slate-900 border-slate-600 focus:ring-0 focus:ring-offset-0">
                                 <div>
                                     <h3 class="font-bold text-sm text-slate-100">${pkg.duration}</h3>
                                     <span class="text-[11px] text-emerald-400 font-medium">${pkg.tag}</span>
                                 </div>
                             </div>
                             <div class="text-left">
-                                <span class="text-lg font-bold text-slate-100">${finalPrice} ج.م</span>
+                                <span class="text-base font-bold text-slate-100">${finalPrice} ج.م</span>
                             </div>
                         </div>
                     </div>
@@ -108,92 +118,80 @@
             });
         }
 
-        let selectedPackageId = "1y";
-        function selectPackage(id) {
-            selectedPackageId = id;
-            document.querySelectorAll('.package-card').forEach(card => card.classList.remove('ring-2', 'border-emerald-500'));
-            document.getElementById(`card-${id}`).classList.add('ring-2', 'border-emerald-500');
+        let selectedTierId = "1y";
+        let base64AssetString = ""; 
+
+        function selectActiveTier(id) {
+            selectedTierId = id;
+            document.querySelectorAll('.package-card').forEach(card => card.classList.remove('ring-2', 'border-emerald-500', 'ring-2', 'ring-emerald-500/30'));
+            document.getElementById(`card-${id}`).classList.add('ring-2', 'border-emerald-500', 'ring-2', 'ring-emerald-500/30');
             document.getElementById(`radio-${id}`).checked = true;
         }
 
-        function updateFileName() {
+        function processSelectedImage() {
             const fileInput = document.getElementById('receipt_image');
             const display = document.getElementById('file-name-display');
             if(fileInput.files.length > 0) {
-                display.innerText = `📄 تم اختيار: ${fileInput.files[0].name}`;
-            }
-        }
-
-        // تحويل الصورة إلى نص رقمي (Base64) لإرسالها داخل ملف الـ JSON بدون سيرفر خارجي
-        function getBase64(file) {
-            return new Promise((resolve, reject) => {
+                const file = fileInput.files[0];
+                display.innerText = `✓ تم إرفاق الإيصال بنجاح`;
+                
                 const reader = new FileReader();
+                reader.onload = function(e) {
+                    base64AssetString = e.target.result;
+                }
                 reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
+            }
         }
 
-        async function sendToNoCodeWorkflow() {
-            const username = document.getElementById('tg_username').value;
-            const phone = document.getElementById('user_phone').value;
-            const fileInput = document.getElementById('receipt_image');
-            const webhookUrl = document.getElementById('webhook_url').value;
-            const selectedPkg = packages.find(p => p.id === selectedPackageId);
+        const tgInstance = window.Telegram?.WebApp;
+        if (tgInstance) { tgInstance.expand(); tgInstance.ready(); }
 
-            if (!username || !phone || fileInput.files.length === 0) {
-                alert('من فضلك أكمل كافة الحقول وارفع صورة الإيصال أولاً.');
+        function executeNoCodePipeline() {
+            const username = document.getElementById('tg_username').value.trim();
+            const phone = document.getElementById('user_phone').value.trim();
+            const targetPkg = packages.find(p => p.id === selectedTierId);
+
+            if (!username || !phone || !base64AssetString) {
+                alert('عذراً، يجب ملء الحقول المطلوبة بالكامل وإرفاق صورة الإيصال لإتمام طلبك.');
                 return;
             }
 
-            const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.innerText = "جاري إرسال الإيصال والبيانات...";
+            const actionBtn = document.getElementById('submit-btn');
+            actionBtn.disabled = true;
+            actionBtn.innerText = "جاري رفع البيانات والإيصال لموقع التفعيل...";
 
-            let imageBase64 = "";
-            try {
-                imageBase64 = await getBase64(fileInput.files[0]);
-            } catch (e) {
-                alert("خطأ أثناء معالجة لقطة شاشة الإيصال، يرجى المحاولة مجدداً.");
-                btn.disabled = false;
-                return;
-            }
-
-            // بناء حزمة البيانات المتكاملة للأوتوميشن
-            const payload = {
-                event: "NEW_SUBSCRIBER_REQUEST",
+            // بناء الحزمة الفنية الموحدة لتطابق متطلبات السيناريو في Make
+            const transactionPayload = {
+                event: "CLIENT_MEMBERSHIP_SUBMISSION",
                 telegram_user: username,
                 phone_number: phone,
-                package_title: selectedPkg.duration,
-                amount_paid: (selectedPkg.basePrice - selectedPkg.discount),
-                receipt_file_base64: imageBase64,
-                submitted_at: new Date().toISOString()
+                package_title: targetPkg.duration,
+                amount_paid: (targetPkg.basePrice - targetPkg.discount),
+                receipt_file_base64: base64AssetString,
+                timestamp: new Date().toISOString()
             };
 
-            // إرسال البيانات فوراً إلى رابط الـ Webhook الخاص بـ Make.com أو Zapier
-            fetch(webhookUrl, {
+            // النقل المباشر عبر بروتوكول HTTP POST إلى خط الأتمتة المدمج الخاص بك
+            fetch(MAKE_WEBHOOK_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(transactionPayload)
             })
-            .then(response => {
-                alert('🎯 تم إرسال إيصالك وبياناتك بنجاح! سيقوم البوت بمراجعة التحويل وتفعيل اشتراكك في الخاص خلال دقائق.');
-                // إذا كان المستخدم يفتح الصفحة من داخل تلجرام، نغلق النافذة تلقائياً
-                if(window.Telegram?.WebApp) {
-                    window.Telegram.WebApp.close();
-                }
+            .then(res => {
+                alert('🎯 ممتاز يا فنان! تم إرسال إيصالك وبياناتك بنجاح. سيقوم البوت بمراجعة التحويل فوراً وإرسال رابط دخول المجموعة إليك في الخاص.');
+                if(tgInstance) { tgInstance.close(); }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('فشل الاتصال بسيرفر الأتمتة، تم عرض البيانات في وحدة التحكم للاختبار.');
+            .catch(err => {
+                console.error("Pipeline Failure Stack:", err);
+                alert('عذراً، فشل الاتصال بخط الأتمتة. يرجى التأكد من شبكة الإنترنت وإعادة المحاولة.');
             })
             .finally(() => {
-                btn.disabled = false;
-                btn.innerText = "تأكيد الاشتراك وإرسال الإيصال للأتمتة";
+                actionBtn.disabled = false;
+                actionBtn.innerText = "تأكيد الاشتراك وإرسال الإيصال للأتمتة";
             });
         }
 
-        window.onload = renderPackages;
+        window.onload = renderClientPackages;
     </script>
 </body>
 </html>
