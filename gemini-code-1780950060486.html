@@ -1,45 +1,43 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم إداري - تعديل الباقات والاشتراكات</title>
+    <title>لوحة التحكم الإدارية - إدارة الباقات والاشتراكات</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-6">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 sm:p-8">
 
     <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+        <!-- Dashboard Header -->
+        <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
             <div>
-                <h1 class="text-2xl font-bold text-indigo-400">لوحة تحكم إدارة الباقات</h1>
-                <p class="text-sm text-slate-400">قم بتحديث قيم الاشتراكات، فترات الخصم، ونسب التوفير فورياً</p>
+                <h1 class="text-xl font-bold text-indigo-400">لوحة تحكم أسعار العضويات والاشتراكات</h1>
+                <p class="text-xs text-slate-400 mt-1">قم بتعديل الأسعار ونسب التوفير الحالية لتنعكس فورياً على شاشة المشتركين داخل البوت</p>
             </div>
-            <span class="bg-indigo-500/10 text-indigo-400 text-xs px-3 py-1.5 rounded-full font-mono border border-indigo-500/20">v1.0.0 Stable</span>
         </div>
 
-        <!-- Dynamic Form Manager -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-            <h2 class="text-lg font-bold mb-6 text-slate-200 flex items-center gap-2">
-                <span>تعديل إعدادات الباقات النشطة حالياً</span>
-            </h2>
-
-            <div class="space-y-4" id="admin-packages-list">
-                <!-- سيتم استدعاء حقول التعديل ديناميكياً هنا عبر السكريبت لسهولة الإدارة -->
+        <!-- Pricing Form Logic Area -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
+            <h2 class="text-sm font-bold mb-4 text-slate-200 border-r-4 border-indigo-500 pr-2">تخصيص تسعير الباقات ونصوص التوفير الحالية</h2>
+            
+            <div class="space-y-3" id="admin-packages-list">
+                <!-- سيتم ملؤها ديناميكياً عبر دالة JS السحابية المحفوظة -->
             </div>
 
-            <div class="mt-8 pt-4 border-t border-slate-850 flex justify-end gap-3">
-                <button onclick="saveNewSettings()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition duration-200">
-                    حفظ التعديلات وتحديث نظام البوت
+            <!-- Sync Control Trigger -->
+            <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+                <button onclick="commitAndSyncNewRates()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-indigo-500/20 transition duration-200">
+                    حفظ التعديلات ومزامنة العرض الفوري
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // مصفوفة التحكم المستدعاة من السيرفر أو الـ LocalStorage للتعديل الفوري
-        let activePackages = JSON.parse(localStorage.getItem('custom_packages')) || [
+        let currentTiers = JSON.parse(localStorage.getItem('custom_packages')) || [
             { id: "1m", duration: "شهر واحد", basePrice: 300, discount: 0, tag: "السعر الأساسي", popular: false },
             { id: "2m", duration: "شهرين", basePrice: 600, discount: 200, tag: "وفر 200 جنيه", popular: false },
             { id: "3m", duration: "3 شهور", basePrice: 900, discount: 300, tag: "وفر 300 جنيه", popular: false },
@@ -47,47 +45,47 @@
             { id: "1y", duration: "سنة كاملة", basePrice: 3600, discount: 1800, tag: "وفر 1800 جنيه (الأكثر طلباً)", popular: true }
         ];
 
-        function renderAdminPanel() {
+        function buildAdminPanel() {
             const listContainer = document.getElementById('admin-packages-list');
             listContainer.innerHTML = '';
 
-            activePackages.forEach((pkg, index) => {
+            currentTiers.forEach((pkg, idx) => {
                 listContainer.innerHTML += `
-                    <div class="bg-slate-850 border border-slate-800 rounded-xl p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                    <div class="bg-slate-850 border border-slate-800 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-4 gap-3 items-center hover:border-slate-700 transition-colors">
                         <div>
-                            <span class="block text-xs text-slate-400 mb-1">المدة الزمنيّة</span>
-                            <input type="text" value="${pkg.duration}" id="duration-${index}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                            <span class="block text-[10px] text-slate-400 mb-1 font-medium">المدة الزمنية</span>
+                            <input type="text" value="${pkg.duration}" id="dur-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
                         </div>
                         <div>
-                            <span class="block text-xs text-slate-400 mb-1">السعر الأساسي (ج.م)</span>
-                            <input type="number" value="${pkg.basePrice}" id="price-${index}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                            <span class="block text-[10px] text-slate-400 mb-1 font-medium">السعر الأساسي (ج.م)</span>
+                            <input type="number" value="${pkg.basePrice}" id="prc-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
                         </div>
                         <div>
-                            <span class="block text-xs text-slate-400 mb-1">قيمة الخصم/التوفير</span>
-                            <input type="number" value="${pkg.discount}" id="discount-${index}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                            <span class="block text-[10px] text-slate-400 mb-1 font-medium">قيمة الخصم/التوفير</span>
+                            <input type="number" value="${pkg.discount}" id="dsc-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
                         </div>
                         <div>
-                            <span class="block text-xs text-slate-400 mb-1">النص الترويجي (Tag)</span>
-                            <input type="text" value="${pkg.tag}" id="tag-${index}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                            <span class="block text-[10px] text-slate-400 mb-1 font-medium">النص الترويجي والخصومات</span>
+                            <input type="text" value="${pkg.tag}" id="tag-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
                         </div>
                     </div>
                 `;
             });
         }
 
-        function saveNewSettings() {
-            activePackages.forEach((pkg, index) => {
-                pkg.duration = document.getElementById(`duration-${index}`).value;
-                pkg.basePrice = parseInt(document.getElementById(`price-${index}`).value) || 0;
-                pkg.discount = parseInt(document.getElementById(`discount-${index}`).value) || 0;
-                pkg.tag = document.getElementById(`tag-${index}`).value;
+        function commitAndSyncNewRates() {
+            currentTiers.forEach((pkg, idx) => {
+                pkg.duration = document.getElementById(`dur-${idx}`).value;
+                pkg.basePrice = parseInt(document.getElementById(`prc-${idx}`).value) || 0;
+                pkg.discount = parseInt(document.getElementById(`dsc-${idx}`).value) || 0;
+                pkg.tag = document.getElementById(`tag-${idx}`).value;
             });
 
-            localStorage.setItem('custom_packages', JSON.stringify(activePackages));
-            alert('تم حفظ الإعدادات السعرية الجديدة بنجاح! سيقوم البوت بقراءة القيم المحدثة تلقائياً في دورة العمل القادمة.');
+            localStorage.setItem('custom_packages', JSON.stringify(currentTiers));
+            alert('🚀 ممتاز! تم حفظ الإعدادات السعرية ونسب التوفير الجديدة بنجاح. ستظهر هذه الأسعار تلقائياً ومباشرة لجميع المستخدمين القادمين عبر التلجرام.');
         }
 
-        window.onload = renderAdminPanel;
+        window.onload = buildAdminPanel;
     </script>
 </body>
 </html>
