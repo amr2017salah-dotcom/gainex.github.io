@@ -3,97 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>البوت الرسمي لإدارة العضويات والاشتراكات</title>
-    <!-- Tailwind CSS لضمان واجهة عصرية وسريعة -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; }
-    </style>
+    <title>نظام تسجيل العضويات والدفع الرسمي</title>
+    <script src="[https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4](https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4)"></script>
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap](https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap)" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
 
     <!-- Header -->
-    <header class="bg-slate-800 border-b border-slate-700 p-4 text-center sticky top-0 z-50 shadow-lg">
-        <h1 class="text-xl font-bold text-emerald-400">نظام إدارة العضويات الرقمية</h1>
-        <p class="text-xs text-slate-400 mt-1">كل الإجراءات تتم في الخاص بأمان وسرية تامة</p>
+    <header class="bg-slate-800 border-b border-slate-700 p-4 text-center shadow-lg">
+        <h1 class="text-xl font-bold text-emerald-400">بوابة تفعيل العضويات الرقمية</h1>
+        <p class="text-xs text-slate-400 mt-1">سجل بياناتك وارفع إيصال التحويل لتفعيل اشتراكك فوراً</p>
     </header>
 
     <!-- Main Content -->
     <main class="container mx-auto max-w-md p-4 flex-grow">
         
-        <!-- User Info Form -->
+        <!-- Webhook Configuration (مخفي، يتم قراءته ديناميكياً) -->
+        <input type="hidden" id="webhook_url" value="[https://hook.us1.make.com/YOUR_ACTUAL_WEBHOOK_HERE](https://hook.us1.make.com/YOUR_ACTUAL_WEBHOOK_HERE)">
+
+        <!-- User Data Step -->
+        <div class="bg-slate-800 rounded-2xl p-5 mb-4 border border-slate-700 shadow-md">
+            <h2 class="text-md font-semibold mb-3 text-slate-200 border-r-4 border-emerald-500 pr-2">1. البيانات الشخصية</h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">اسم المستخدم على تلجرام (Telegram Username)</label>
+                    <input type="text" id="tg_username" placeholder="@username" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald-500 text-left" dir="ltr" required>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">رقم الهاتف المرتبط بحسابك</label>
+                    <input type="tel" id="user_phone" placeholder="01xxxxxxxxx" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald-500 text-left" dir="ltr" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Packages Step -->
+        <div class="mb-4">
+            <h2 class="text-md font-semibold mb-3 text-slate-200 border-r-4 border-emerald-500 pr-2">2. اختر باقة الاشتراك المناسبة:</h2>
+            <div id="packages-container" class="space-y-2">
+                <!-- الـ JavaScript يولد الباقات هنا تلقائياً -->
+            </div>
+        </div>
+
+        <!-- Receipt Upload Step -->
         <div class="bg-slate-800 rounded-2xl p-5 mb-6 border border-slate-700 shadow-md">
-            <h2 class="text-lg font-semibold mb-4 text-slate-200 border-r-4 border-emerald-500 pr-2">بيانات العضوية الجديدة</h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm text-slate-400 mb-1">اسم المستخدم (Telegram Username)</label>
-                    <input type="text" id="tg_username" placeholder="@username" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500 text-left" dir="ltr" required>
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-400 mb-1">رقم الهاتف (للتواصل وتأكيد الدفع)</label>
-                    <input type="tel" id="user_phone" placeholder="01xxxxxxxxx" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500 text-left" dir="ltr" required>
-                </div>
+            <h2 class="text-md font-semibold mb-2 text-slate-200 border-r-4 border-emerald-500 pr-2">3. إرفاق إيصال التحويل</h2>
+            <p class="text-xs text-slate-400 mb-3">يرجى تحويل المبلغ الموضح للباقة المحددة وارفق لقطة شاشة للإيصال.</p>
+            
+            <div class="flex items-center justify-center w-full">
+                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-600 border-dashed rounded-lg cursor-pointer bg-slate-900 hover:bg-slate-850 transition duration-200">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-3 text-slate-400" aria-hidden="true" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" fill="none" viewbox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="text-xs text-slate-400"><span class="font-semibold">اضغط لرفع الإيصال</span> أو اسحب الملف هنا</p>
+                        <p id="file-name-display" class="text-[11px] text-emerald-400 mt-1 font-medium"></p>
+                    </div>
+                    <input type="file" id="receipt_image" accept="image/*" class="hidden" onchange="updateFileName()"/>
+                </label>
             </div>
         </div>
 
-        <!-- Pricing Packages Grid -->
-        <div class="mb-6">
-            <h2 class="text-lg font-semibold mb-4 text-slate-200 border-r-4 border-emerald-500 pr-2">اختر الباقة المناسبة لك:</h2>
-            <div id="packages-container" class="space-y-3">
-                <!-- سيتم توليد الباقات ديناميكياً بواسطة JavaScript لسهولة التحكم والتعديل -->
-            </div>
-        </div>
-
-        <!-- Action Button -->
-        <button id="submit-btn" onclick="processSubscription()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold p-4 rounded-xl shadow-lg transition duration-200 transform active:scale-95 flex justify-center items-center gap-2">
-            <span>تأكيد الاشتراك وتفعيل العضوية</span>
+        <!-- Submit Button -->
+        <button id="submit-btn" onclick="sendToNoCodeWorkflow()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold p-3.5 rounded-xl shadow-lg transition duration-200 transform active:scale-95 flex justify-center items-center gap-2">
+            <span>تأكيد الاشتراك وإرسال الإيصال للأتمتة</span>
         </button>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-950 p-3 text-center border-t border-slate-800">
-        <p class="text-xs text-slate-500">مؤمن بالكامل عبر نظام تشفير بوت التلجرام</p>
-    </footer>
-
-    <!-- Telegram WebApp Script Dynamic Integration -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // مصفوفة البيانات الأساسية للباقات كما طلبت مع إمكانية تعديلها ديناميكياً
-        let packages = [
+        // إعداد الباقات من قاعدة البيانات المحلية للمتصفح أو القيم الافتراضية
+        let packages = JSON.parse(localStorage.getItem('custom_packages')) || [
             { id: "1m", duration: "شهر واحد", basePrice: 300, discount: 0, tag: "السعر الأساسي", popular: false },
             { id: "2m", duration: "شهرين", basePrice: 600, discount: 200, tag: "وفر 200 جنيه", popular: false },
             { id: "3m", duration: "3 شهور", basePrice: 900, discount: 300, tag: "وفر 300 جنيه", popular: false },
             { id: "6m", duration: "6 شهور", basePrice: 1800, discount: 750, tag: "وفر 750 جنيه", popular: false },
-            { id: "1y", duration: "سنة كاملة", basePrice: 3600, discount: 1800, tag: "وفر 1800 جنيه", popular: true }
+            { id: "1y", duration: "سنة كاملة", basePrice: 3600, discount: 1800, tag: "وفر 1800 جنيه (الأكثر طلباً)", popular: true }
         ];
 
-        // تحميل الباقات وعرضها في الصفحة
         function renderPackages() {
             const container = document.getElementById('packages-container');
             container.innerHTML = '';
-
             packages.forEach(pkg => {
                 const finalPrice = pkg.basePrice - pkg.discount;
-                const isPopularStyle = pkg.popular ? 'border-emerald-500 bg-slate-800/90 ring-2 ring-emerald-500' : 'border-slate-700 bg-slate-800';
-                
+                const isSelected = pkg.popular ? 'border-emerald-500 bg-slate-800 ring-2 ring-emerald-500' : 'border-slate-700 bg-slate-800';
                 container.innerHTML += `
-                    <div onclick="selectPackage('${pkg.id}')" id="card-${pkg.id}" class="package-card border rounded-xl p-4 transition-all duration-200 cursor-pointer relative ${isPopularStyle}">
-                        ${pkg.popular ? '<span class="absolute -top-3 left-4 bg-emerald-500 text-slate-950 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md">الأكثر طلباً</span>' : ''}
+                    <div onclick="selectPackage('${pkg.id}')" id="card-${pkg.id}" class="package-card border rounded-xl p-3.5 transition-all duration-200 cursor-pointer ${isSelected}">
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-3">
-                                <input type="radio" name="membership_package" id="radio-${pkg.id}" value="${pkg.id}" ${pkg.popular ? 'checked' : ''} class="w-4 h-4 text-emerald-500 focus:ring-emerald-400 bg-slate-900 border-slate-600">
+                                <input type="radio" name="membership_pkg" id="radio-${pkg.id}" value="${pkg.id}" ${pkg.popular ? 'checked' : ''} class="w-4 h-4 text-emerald-500 bg-slate-900 border-slate-600">
                                 <div>
-                                    <h3 class="font-bold text-slate-100">${pkg.duration}</h3>
-                                    <span class="text-xs text-emerald-400 font-medium">${pkg.tag}</span>
+                                    <h3 class="font-bold text-sm text-slate-100">${pkg.duration}</h3>
+                                    <span class="text-[11px] text-emerald-400 font-medium">${pkg.tag}</span>
                                 </div>
                             </div>
                             <div class="text-left">
-                                <span class="text-xl font-bold text-slate-100">${finalPrice} ج.م</span>
-                                ${pkg.discount > 0 ? `<p class="text-xs text-slate-400 line-through">${pkg.basePrice} ج.م</p>` : ''}
+                                <span class="text-lg font-bold text-slate-100">${finalPrice} ج.م</span>
                             </div>
                         </div>
                     </div>
@@ -101,7 +108,7 @@
             });
         }
 
-        let selectedPackageId = "1y"; // الباقة الافتراضية
+        let selectedPackageId = "1y";
         function selectPackage(id) {
             selectedPackageId = id;
             document.querySelectorAll('.package-card').forEach(card => card.classList.remove('ring-2', 'border-emerald-500'));
@@ -109,47 +116,83 @@
             document.getElementById(`radio-${id}`).checked = true;
         }
 
-        // تهيئة تطبيق التلجرام المصغر (Telegram WebApp)
-        const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.expand(); // تمديد الشاشة بالكامل داخل تطبيق تلجرام
-            tg.ready();
+        function updateFileName() {
+            const fileInput = document.getElementById('receipt_image');
+            const display = document.getElementById('file-name-display');
+            if(fileInput.files.length > 0) {
+                display.innerText = `📄 تم اختيار: ${fileInput.files[0].name}`;
+            }
         }
 
-        // معالجة البيانات وإرسالها للبوت
-        function processSubscription() {
+        // تحويل الصورة إلى نص رقمي (Base64) لإرسالها داخل ملف الـ JSON بدون سيرفر خارجي
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        async function sendToNoCodeWorkflow() {
             const username = document.getElementById('tg_username').value;
             const phone = document.getElementById('user_phone').value;
+            const fileInput = document.getElementById('receipt_image');
+            const webhookUrl = document.getElementById('webhook_url').value;
             const selectedPkg = packages.find(p => p.id === selectedPackageId);
 
-            if (!username || !phone) {
-                alert('فضلاً، قم بملء الحقول المطلوبة لتسجيل عضوية صحيحة.');
+            if (!username || !phone || fileInput.files.length === 0) {
+                alert('من فضلك أكمل كافة الحقول وارفع صورة الإيصال أولاً.');
                 return;
             }
 
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerText = "جاري إرسال الإيصال والبيانات...";
+
+            let imageBase64 = "";
+            try {
+                imageBase64 = await getBase64(fileInput.files[0]);
+            } catch (e) {
+                alert("خطأ أثناء معالجة لقطة شاشة الإيصال، يرجى المحاولة مجدداً.");
+                btn.disabled = false;
+                return;
+            }
+
+            // بناء حزمة البيانات المتكاملة للأوتوميشن
             const payload = {
-                action: "NEW_SUBSCRIBER",
+                event: "NEW_SUBSCRIBER_REQUEST",
                 telegram_user: username,
                 phone_number: phone,
-                package: {
-                    id: selectedPkg.id,
-                    duration: selectedPkg.duration,
-                    price: (selectedPkg.basePrice - selectedPkg.discount)
-                },
-                timestamp: new Date().toISOString()
+                package_title: selectedPkg.duration,
+                amount_paid: (selectedPkg.basePrice - selectedPkg.discount),
+                receipt_file_base64: imageBase64,
+                submitted_at: new Date().toISOString()
             };
 
-            // إرسال البيانات مباشرة لشات البوت وإغلاق الـ WebApp تلقائياً
-            if (tg && tg.sendData) {
-                tg.sendData(JSON.stringify(payload));
-            } else {
-                // عرض المخرج في وحدة التحكم في حالة التصفح الخارجي للاختبار والتطوير
-                console.log("تمت العملية خارج تلجرام، البيانات المرسلة لبوتك:", payload);
-                alert(`تم إرسال طلب الاشتراك بنجاح للباقة: ${selectedPkg.duration}`);
-            }
+            // إرسال البيانات فوراً إلى رابط الـ Webhook الخاص بـ Make.com أو Zapier
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                alert('🎯 تم إرسال إيصالك وبياناتك بنجاح! سيقوم البوت بمراجعة التحويل وتفعيل اشتراكك في الخاص خلال دقائق.');
+                // إذا كان المستخدم يفتح الصفحة من داخل تلجرام، نغلق النافذة تلقائياً
+                if(window.Telegram?.WebApp) {
+                    window.Telegram.WebApp.close();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('فشل الاتصال بسيرفر الأتمتة، تم عرض البيانات في وحدة التحكم للاختبار.');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "تأكيد الاشتراك وإرسال الإيصال للأتمتة";
+            });
         }
 
-        // تشغيل البناء الأولي للباقات عند فتح الصفحة
         window.onload = renderPackages;
     </script>
 </body>
