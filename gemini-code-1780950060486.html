@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم إداري - تعديل الباقات والاشتراكات</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6">
+
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-indigo-400">لوحة تحكم إدارة الباقات</h1>
+                <p class="text-sm text-slate-400">قم بتحديث قيم الاشتراكات، فترات الخصم، ونسب التوفير فورياً</p>
+            </div>
+            <span class="bg-indigo-500/10 text-indigo-400 text-xs px-3 py-1.5 rounded-full font-mono border border-indigo-500/20">v1.0.0 Stable</span>
+        </div>
+
+        <!-- Dynamic Form Manager -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <h2 class="text-lg font-bold mb-6 text-slate-200 flex items-center gap-2">
+                <span>تعديل إعدادات الباقات النشطة حالياً</span>
+            </h2>
+
+            <div class="space-y-4" id="admin-packages-list">
+                <!-- سيتم استدعاء حقول التعديل ديناميكياً هنا عبر السكريبت لسهولة الإدارة -->
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-slate-850 flex justify-end gap-3">
+                <button onclick="saveNewSettings()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition duration-200">
+                    حفظ التعديلات وتحديث نظام البوت
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // مصفوفة التحكم المستدعاة من السيرفر أو الـ LocalStorage للتعديل الفوري
+        let activePackages = JSON.parse(localStorage.getItem('custom_packages')) || [
+            { id: "1m", duration: "شهر واحد", basePrice: 300, discount: 0, tag: "السعر الأساسي", popular: false },
+            { id: "2m", duration: "شهرين", basePrice: 600, discount: 200, tag: "وفر 200 جنيه", popular: false },
+            { id: "3m", duration: "3 شهور", basePrice: 900, discount: 300, tag: "وفر 300 جنيه", popular: false },
+            { id: "6m", duration: "6 شهور", basePrice: 1800, discount: 750, tag: "وفر 750 جنيه", popular: false },
+            { id: "1y", duration: "سنة كاملة", basePrice: 3600, discount: 1800, tag: "وفر 1800 جنيه (الأكثر طلباً)", popular: true }
+        ];
+
+        function renderAdminPanel() {
+            const listContainer = document.getElementById('admin-packages-list');
+            listContainer.innerHTML = '';
+
+            activePackages.forEach((pkg, index) => {
+                listContainer.innerHTML += `
+                    <div class="bg-slate-850 border border-slate-800 rounded-xl p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                        <div>
+                            <span class="block text-xs text-slate-400 mb-1">المدة الزمنيّة</span>
+                            <input type="text" value="${pkg.duration}" id="duration-${index}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <span class="block text-xs text-slate-400 mb-1">السعر الأساسي (ج.م)</span>
+                            <input type="number" value="${pkg.basePrice}" id="price-${index}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <span class="block text-xs text-slate-400 mb-1">قيمة الخصم/التوفير</span>
+                            <input type="number" value="${pkg.discount}" id="discount-${index}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <span class="block text-xs text-slate-400 mb-1">النص الترويجي (Tag)</span>
+                            <input type="text" value="${pkg.tag}" id="tag-${index}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function saveNewSettings() {
+            activePackages.forEach((pkg, index) => {
+                pkg.duration = document.getElementById(`duration-${index}`).value;
+                pkg.basePrice = parseInt(document.getElementById(`price-${index}`).value) || 0;
+                pkg.discount = parseInt(document.getElementById(`discount-${index}`).value) || 0;
+                pkg.tag = document.getElementById(`tag-${index}`).value;
+            });
+
+            localStorage.setItem('custom_packages', JSON.stringify(activePackages));
+            alert('تم حفظ الإعدادات السعرية الجديدة بنجاح! سيقوم البوت بقراءة القيم المحدثة تلقائياً في دورة العمل القادمة.');
+        }
+
+        window.onload = renderAdminPanel;
+    </script>
+</body>
+</html>
